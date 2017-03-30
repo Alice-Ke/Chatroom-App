@@ -1,0 +1,389 @@
+Test-case 1:
+1. start server
+Open a terminal_Server:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -s 1218
+
+2. start client x(the table should be sent from server to x)
+Open another terminal_Alice:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+In terminal_Alice, it is:
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>
+
+3. start client y(the table should be sent from server to x and y)
+Open another terminal_Joy:
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+4. start client a(the table should be sent from server to x and y and z)
+Open another terminal_Bob:
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+5. chat x -> y, y->z, ... , x ->z (All combinations)
+Here are some records between Alice, Joy and Bob:
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: how are you?
+>>>send Bob GREAT!
+>>>[Message received by Bob]
+>>>send Joy do you wanna hang out today?
+>>>[Message received by Joy]
+>>>Client Joy: I am afraid i cannot...
+>>>send Joy Fine. Let's do hw then.
+>>>[Message received by Joy]
+>>>
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: hi Joy, how are you doing these days?
+>>>send Bob yeah, but too much homework these days...
+>>>[Message received by Bob]
+>>>Client Alice: do you wanna hang out today?
+>>>send Alice I am afraid i cannot...
+>>>[Message received by Alice]
+>>>Client Alice: Fine. Let's do hw then.
+>>>
+
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>send Alice how are you?
+>>>[Message received by Alice]
+>>>Client Alice: GREAT!
+>>>send Joy hi Joy, how are you doing these days?
+>>>[Message received by Joy]
+>>>Client Joy: yeah, but too much homework these days...
+>>>
+
+6. dereg x (the table should be sent to y, z. x should receive ’ack’)
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: how are you?
+>>>send Bob GREAT!
+>>>[Message received by Bob]
+>>>send Joy do you wanna hang out today?
+>>>[Message received by Joy]
+>>>Client Joy: I am afraid i cannot...
+>>>send Joy Fine. Let's do hw then.
+>>>[Message received by Joy]
+>>>dereg Alice
+>>>[You are Offline. Bye]
+>>>
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: hi Joy, how are you doing these days?
+>>>send Bob yeah, but too much homework these days...
+>>>[Message received by Bob]
+>>>Client Alice: do you wanna hang out today?
+>>>send Alice I am afraid i cannot...
+>>>[Message received by Alice]
+>>>Client Alice: Fine. Let's do hw then.
+>>>[Client table updated.]
+>>>
+
+
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>send Alice how are you?
+>>>[Message received by Alice]
+>>>Client Alice: GREAT!
+>>>send Joy hi Joy, how are you doing these days?
+>>>[Message received by Joy]
+>>>Client Joy: yeah, but too much homework these days...
+>>>[Client table updated.]
+>>>
+
+7. chat y->x (this should fail and message should be sent to server, and message has to be saved for x in the
+server)
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: hi Joy, how are you doing these days?
+>>>send Bob yeah, but too much homework these days...
+>>>[Message received by Bob]
+>>>Client Alice: do you wanna hang out today?
+>>>send Alice I am afraid i cannot...
+>>>[Message received by Alice]
+>>>Client Alice: Fine. Let's do hw then.
+>>>[Client table updated.]
+>>>send Alice are you there?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>
+
+8. chat z->x (same as above)
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>send Alice how are you?
+>>>[Message received by Alice]
+>>>Client Alice: GREAT!
+>>>send Joy hi Joy, how are you doing these days?
+>>>[Message received by Joy]
+>>>Client Joy: yeah, but too much homework these days...
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>send Alice have you done work for computer networks?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>
+
+9. reg x (messages should be sent from server to x, x’s status has to be broadcasted to all the other clients)
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: how are you?
+>>>send Bob GREAT!
+>>>[Message received by Bob]
+>>>send Joy do you wanna hang out today?
+>>>[Message received by Joy]
+>>>Client Joy: I am afraid i cannot...
+>>>send Joy Fine. Let's do hw then.
+>>>[Message received by Joy]
+>>>dereg Alice
+>>>[You are Offline. Bye]
+>>>reg Alice
+>>>>>>[Welcome, You are registered.]
+>>>[You have messages]
+>>>client Joy: 12:37:46.686 are you there?
+>>>client Bob: 12:39:02.428 have you done work for computer networks?
+
+>>>[Client table updated.]
+>>>
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: hi Joy, how are you doing these days?
+>>>send Bob yeah, but too much homework these days...
+>>>[Message received by Bob]
+>>>Client Alice: do you wanna hang out today?
+>>>send Alice I am afraid i cannot...
+>>>[Message received by Alice]
+>>>Client Alice: Fine. Let's do hw then.
+>>>[Client table updated.]
+>>>send Alice are you there?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>send Alice how are you?
+>>>[Message received by Alice]
+>>>Client Alice: GREAT!
+>>>send Joy hi Joy, how are you doing these days?
+>>>[Message received by Joy]
+>>>Client Joy: yeah, but too much homework these days...
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>send Alice have you done work for computer networks?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+10. x, y, z : exit
+with control+c:
+In terminal_Alice, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Alice 127.0.0.1 1218 1219
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: how are you?
+>>>send Bob GREAT!
+>>>[Message received by Bob]
+>>>send Joy do you wanna hang out today?
+>>>[Message received by Joy]
+>>>Client Joy: I am afraid i cannot...
+>>>send Joy Fine. Let's do hw then.
+>>>[Message received by Joy]
+>>>dereg Alice
+>>>[You are Offline. Bye]
+>>>reg Alice
+>>>[Welcome, You are registered.]
+>>>[You have messages]
+>>>client Joy: 12:37:46.686 are you there?
+>>>client Bob: 12:39:02.428 have you done work for computer networks?
+
+>>>[Client table updated.]
+>>>^Cdyn-160-39-147-29:Pu_pk2532_PA1 puke$ 
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>Client Bob: hi Joy, how are you doing these days?
+>>>send Bob yeah, but too much homework these days...
+>>>[Message received by Bob]
+>>>Client Alice: do you wanna hang out today?
+>>>send Alice I am afraid i cannot...
+>>>[Message received by Alice]
+>>>Client Alice: Fine. Let's do hw then.
+>>>[Client table updated.]
+>>>send Alice are you there?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>^Cdyn-160-39-147-29:Pu_pk2532_PA1 puke$ 
+
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>send Alice how are you?
+>>>[Message received by Alice]
+>>>Client Alice: GREAT!
+>>>send Joy hi Joy, how are you doing these days?
+>>>[Message received by Joy]
+>>>Client Joy: yeah, but too much homework these days...
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>send Alice have you done work for computer networks?
+>>>[Messages received by the server and saved]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>^Cdyn-160-39-147-29:Pu_pk2532_PA1 puke$ 
+
+Test-case 2:
+1. start server
+Open a terminal_Server:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -s 1218
+
+2. start client x(the table should be sent from server to x)
+Open another terminal_Joy:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+3. start client y(the table should be sent from server to x and y)
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>
+
+>>>
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+4. dereg y
+In terminal_Bob, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Bob 127.0.0.1 1218 1221
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>dereg Bob
+>>>[You are Offline. Bye]
+>>>
+
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>
+
+5. server exit
+In terminal_Server, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -s 1218
+^Cdyn-160-39-147-29:Pu_pk2532_PA1 puke$ 
+
+6. dereg x
+In terminal_Joy, it is:
+dyn-160-39-147-29:Pu_pk2532_PA1 puke$ ./UdpChat -c Joy 127.0.0.1 1218 1220
+>>>[Welcome, You are registered.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>[Client table updated.]
+>>>dereg Joy
+>>>[Sorry, please retry]
+>>>dereg Joy
+>>>[Sorry, please retry]
+>>>dereg Joy
+>>>[Sorry, please retry]
+>>>dereg Joy
+>>>[Sorry, please retry]
+>>>dereg Joy
+>>>[Sorry, please retry]
+>>>dereg Joy
+>>>[Server not responding]
+>>>[Exiting]
+
+
+
+
+
+
+
+
+

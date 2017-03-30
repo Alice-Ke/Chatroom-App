@@ -1,0 +1,26 @@
+Pu Ke
+pk2532
+
+Coded in java, this is a Server-Multiple Clients chat room program with UDP.
+
+It uses the multi-threads programming concept. For each client, two threads are created: one handles sending task, and the other handles receiving task( in receiving thread, the task to send message-receiving-ack is also included ). And a main Client file holds this two threads and declare several global variables to support communications between these two threads. For the server, only one main Server file is used to satisfy both sending and receiving functions.
+
+Added info: 
+1. All the functions required by the assignment are satisfied.
+2. IntBoxer class acts as a flag to reflect status between threads.
+3. Both shell script and the java files can handle exceptions, depending on the kind of errors the user does.
+4. Test cases are shown in test.txt.
+5. All off-messages are stored in txt files named with the client's name.
+6. For dereg retry scenario, the client window will display ">>>Sorry, please retry", and she should type in dereg again, if failed for another 5 times, then the client window will display ">>> [Server not responding]" and ">>> [Exiting]"( shown in test.txt case 2 )
+
+------------------------------
+To run and test:
+
+$ make
+This command will compile all the needed class files to run. 
+
+$ ./UdpChat <mode> <command-line arguments>
+This command will call the shell script to run the java claass files and pass in the input arguments:
+For the server mode, please use: ./UdpChat -s <port>
+For the client mode, please use: ./UdpChat -c <nick-name> <server-ip> <server-port> <client-port> 
+

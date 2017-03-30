@@ -1,0 +1,10 @@
+#!/bin/sh
+if [ $1 = "-s" ]
+then
+    java Server $2
+elif [ $1 = "-c" ]
+then 
+	java Client $2 $3 $4 $5
+else
+	echo "Wrong Input Format: please use './UdpChat <mode> <command-line arguments>'"
+fi
